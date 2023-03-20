@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Floral Image Display</title>
+  <style>
+    /* feel free to style the canvas any way you want. If you want it to
+      use the entire window, set width: 100% and height: 100%. */
+
+    canvas {
+      display: block;
+      margin: 10px auto;
+      width: 80%;
+      height: 500px;
+    }
+  </style>
+
+  <script src="./js/three.js"></script>
+  <script src="./js/OrbitControls.js"></script>
+  <script src="./js/SceneUtils.js"></script>
+  <!-- <script src="./js/dat.gui.js"></script> -->
+
+</head>
+
+<body>
+  <h1><em>Relaxing Floral Scene</em></h1>
+  <p>
+    <script>
+
+      // create a scene
+      var scene = new THREE.Scene();
+
+      var cameraParams = {
+            near: 1,
+            far: 250,
+            fov: 75,                // degrees
+            aspectRatio: 700 / 500,   // from dimensions of the canvas, see CSS
+            atX: 0,
+            atY: 0,
+            atZ: 0,
+            eyeX: 0,
+            eyeY: 0,
+            eyeZ: -50,
+            upX: 0,
+            upY: 1,
+            upZ: 0
+        };
+
+        var state = {};
+
+        function render() {
+            renderer.render(scene, camera);
+        }
+
+        function setupCameraControls() {
+            var cameraControls = new THREE.OrbitControls(camera, canvas);
+            state.cameraControls = cameraControls;
+            cameraControls.addEventListener('change', render);
+            cameraControls.update();
+        }
+
+      // displayPanels() displays three panels with texture-mapped image of floral scene
+
+      function displayPanel0(texture) {
+        // plane geometry with texture-mapped floral image
+        var planeGeom = new THREE.PlaneGeometry(10, 10);
+        var planeMat = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          map: texture
+        });
+        var planeMesh = new THREE.Mesh(planeGeom, planeMat);
+        scene.add(planeMesh);
+
+        render();    // render the scene
+      }
+
+      function displayPanel1(texture) {
+        // plane geometry with texture-mapped floral image
+        var planeGeom = new THREE.PlaneGeometry(10, 10);
+        var planeMat = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          map: texture
+        });
+        var planeMeshR = new THREE.Mesh(planeGeom, planeMat);
+        var dist = 5 * Math.cos(Math.PI / 4);
+        planeMeshR.position.set(5 + dist, 0, dist);
+        planeMeshR.rotation.y = -Math.PI / 4;
+        scene.add(planeMeshR);
+
+        render();    // render the scene
+      }
+
+      function displayPanel2(texture) {
+        // plane geometry with texture-mapped floral image
+        var planeGeom = new THREE.PlaneGeometry(10, 10);
+        var planeMat = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          map: texture
+        });
+        var planeMeshL = new THREE.Mesh(planeGeom, planeMat);
+        var dist = 5 * Math.cos(Math.PI / 4);
+        planeMeshL.position.set(-5 - dist, 0, dist);
+        planeMeshL.rotation.y = Math.PI / 4;
+        scene.add(planeMeshL);
+
+        render();    // render the scene
+      }
+
+      var loader = new THREE.TextureLoader();
+
+
+      loader.load("./images/GU-ISE1.jpg",
+        function (texture) {
+          displayPanel0(texture);
+        });
+      loader.load("./images/GU-ISE2.jpg",
+        function (texture) {
+          displayPanel1(texture);
+        });
+      loader.load("./images/GU-ISE0.jpg",
+        function (texture) {
+          displayPanel2(texture);
+        });
+
+        var renderer = new THREE.WebGLRenderer();
+
+        var canvas = renderer.domElement;
+        state.renderer = renderer;  
+        state.scene = scene;        
+        var parent = document.body;
+        parent.appendChild(canvas);
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        renderer.setClearColor(new THREE.Color(0x2f2f2f), 1);
+
+        var camera = setupCamera(cameraParams);
+        scene.add(camera);
+
+        setupCameraControls();
+
+        render();
+
+    </script>
+  </p>
+  <!-- <canvas width="1433" height="500" style="width: 1433px; height: 500px;"></canvas> -->
+
+</body>
+
+</html>
